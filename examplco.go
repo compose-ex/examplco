@@ -15,16 +15,16 @@ import (
 )
 
 var (
-	app          = kingpin.New("examplco", "An etcd demonstration")
-	peerlist     = app.Flag("peers", "etcd peers").Default("http://127.0.0.1:4001,http://127.0.0.1:2379").OverrideDefaultFromEnvar("EX_PEERS").String()
-	username     = app.Flag("user", "etcd User").OverrideDefaultFromEnvar("EX_USER").String()
-	password     = app.Flag("pass", "etcd Password").OverrideDefaultFromEnvar("EX_PASS").String()
-	config       = app.Command("config", "Change config data")
-	configserver = config.Arg("server", "Server name").Required().String()
-	configvar    = config.Arg("var", "Config variable").Required().String()
-	configval    = config.Arg("val", "Config value").Required().String()
-	server       = app.Command("server", "Go into server mode and listen for changes")
-	servername   = server.Arg("server", "Server name").Required().String()
+	app           = kingpin.New("examplco", "An etcd demonstration")
+	endpointslist = app.Flag("endpoints", "etcd endpoints").Default("http://127.0.0.1:4001,http://127.0.0.1:2379").OverrideDefaultFromEnvar("EX_ENDPOINTS").String()
+	username      = app.Flag("user", "etcd User").OverrideDefaultFromEnvar("EX_USER").String()
+	password      = app.Flag("pass", "etcd Password").OverrideDefaultFromEnvar("EX_PASS").String()
+	config        = app.Command("config", "Change config data")
+	configserver  = config.Arg("server", "Server name").Required().String()
+	configvar     = config.Arg("var", "Config variable").Required().String()
+	configval     = config.Arg("val", "Config value").Required().String()
+	server        = app.Command("server", "Go into server mode and listen for changes")
+	servername    = server.Arg("server", "Server name").Required().String()
 )
 
 var configbase = "/config/"
@@ -33,10 +33,10 @@ func main() {
 	kingpin.Version("0.0.1")
 	command := kingpin.MustParse(app.Parse(os.Args[1:]))
 
-	peers := strings.Split(*peerlist, ",")
+	endpoints := strings.Split(*endpointslist, ",")
 
 	cfg := client.Config{
-		Endpoints:               peers,
+		Endpoints:               endpoints,
 		HeaderTimeoutPerRequest: time.Minute,
 		Username:                *username,
 		Password:                *password,
